@@ -48,11 +48,21 @@ bool isExplicitVoidCall(Expr expr) {
 void REPL(){
     // read - evaluation - print loop
     Assoc global_env = empty();
-    while (1){
+    while (std::cin.good()){
         #ifndef ONLINE_JUDGE
             std::cout << "scm> ";
         #endif
+        // Check for EOF before reading
+        int c = std::cin.peek();
+        if (c == EOF || c == '\n') {
+            // Try to consume the newline and check again
+            if (c == '\n') std::cin.get();
+            if (std::cin.peek() == EOF) {
+                break;
+            }
+        }
         Syntax stx = readSyntax(std :: cin); // read
+        // Check if we actually read anything
         try{
             Expr expr = stx -> parse(global_env); // parse
             // stx -> show(std :: cout); // syntax print
